@@ -1,0 +1,23 @@
+[project]
+name = "pytorch-projects"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "zhaohuiwang",email = "ezhwang@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "torch (>=2.7.0,<3.0.0)",
+    "torchvision (>=0.22.0,<0.23.0)",
+    "matplotlib (>=3.10.3,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)",
+    "fastapi[standard] (>=0.115.12,<0.116.0)",
+    "torchsummary (>=1.5.1,<2.0.0)",
+    "requests (>=2.32.3,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
