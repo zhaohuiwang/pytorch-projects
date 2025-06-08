@@ -17,8 +17,6 @@ true_b = torch.tensor(4.)
 
 train_size = 0.8
 
-
-
 X, y = synthesize_data(true_w, true_b, 1000)
 
 size = int(X.shape[-2]*train_size)
@@ -33,7 +31,6 @@ y_train = y[index]
 # Prepare the test set.
 X_test = torch.from_numpy(norm(np.delete(X, index, axis=0).numpy()))
 y_test = np.delete(y, index, axis=0)
-
 
 
 if __name__ == "__main__":
