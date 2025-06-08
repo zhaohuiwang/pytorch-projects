@@ -25,17 +25,20 @@ model_demo/
 └── utils.py
 ```
 
-I run the `data_prep.py` 
+I run the `data_prep.py` as a script file
 ```Bash
-pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.data_prep
-```
-with the following path specification in the script
-```python
-import sys
+pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python  src/model_demo/data_prep.py
+# with the following path specification in the scriptimport sys
 sys.path.append('/src/model_demo')
-
 from utils import synthesize_data, norm
 ```
+or run as a module
+```Bash
+pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.data_prep
+# with the alternative specification in the script
+from src.model_demo.utils import synthesize_data, norm
+```
+
 I configured and run `model_demo.py` as a module with `-m` option. 
 ```Bash
 pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.model_demo

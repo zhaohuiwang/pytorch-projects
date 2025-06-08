@@ -82,7 +82,7 @@ async def predict(features: PredictionFeatures):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
-    
+        
 
 
 # https://towardsdatascience.com/journey-to-full-stack-data-scientist-model-deployment-f385f244ec67/
