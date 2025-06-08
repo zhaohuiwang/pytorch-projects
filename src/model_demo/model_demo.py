@@ -8,12 +8,22 @@ import torch.optim as optim
 from typing import Iterator, Any, Tuple
 import numpy.typing as npt
 from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model
+from src.model_demo.config import MetadataConfigSchema
 
+#data_dir = "data/model_demo"
+#data_fname = "data_tensors.pt"
+#model_dir = "models/model_demo"
+#model_fname = "demo_model_weights.pth"
 
-DATA_DIR = Path("data/model_demo")
-DATA_FNAME = "data_tensors.pt"
-MODEL_DIR = Path("models/model_demo")
-MODEL_FNAME = "demo_model_weights.pth"
+config = MetadataConfigSchema()
+data_dir = config.data.data_dir
+data_fname = config.data.data_fname
+model_dir = config.data.model_dir
+model_fname = config.data.model_fname
+
+learning_rate = config.model.learning_rate
+batch_size = config.model.batch_size
+epochs = config.model.epochs
 
 ## Logger setup
 # Create a logger
@@ -57,7 +67,7 @@ logger.info(f"Using {device} device")
 
 ## Prepare the dataset - Load tensor
 try:
-    tensors_dict = torch.load(DATA_DIR / DATA_FNAME)
+    tensors_dict = torch.load(Path(data_dir) / data_fname)
 except FileNotFoundError:
     logger.error('Data or path not fund!')
 
@@ -78,13 +88,13 @@ model = LinearRegressionModel(input_dim, output_dim)
 model.to(device)
 
 # Step 3: Instantiate Loss class and Optimizer class
-learning_rate = 0.01
+# learning_rate = 0.01
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 criterion = nn.MSELoss()
 
 # Step 4: Train the model
-batch_size = 100   # batch_size should be a positive integer value
-epochs = 100
+# batch_size = 100   # batch_size should be a positive integer value
+# epochs = 100
 
 # Data loader combines a dataset and a sampler, and provides an iterable over the given dataset.
 data_iter = load_data((X_train, y_train), batch_size)
@@ -107,10 +117,10 @@ for epoch in range(epochs):
        optimizer.step() # Updating parameters
 
 # step 5: Persist the trained model 
-torch.save(model.state_dict(), MODEL_DIR / MODEL_FNAME)
+torch.save(model.state_dict(), Path(model_dir) / model_fname)
 
 logger.info("Model training accomplished!")
-logger.info(f"Model is saved as {MODEL_DIR / MODEL_FNAME}")
+logger.info(f"Model is saved as {Path(model_dir) / model_fname}")
 
 ## Model inference
 if __name__ == "__main__":
@@ -133,9 +143,9 @@ if __name__ == "__main__":
     # Convert to NumPy and save
     numpy_predictions = predictions.cpu().numpy()
 
-    np.save(DATA_DIR / 'predictions.npy', numpy_predictions)
-    np.savetxt(DATA_DIR / 'predictions.csv', numpy_predictions, delimiter=',', fmt='%d')
-    logger.info(f"Inference result is saved in directory: {DATA_DIR}")
+    np.save(Path(data_dir) / 'predictions.npy', numpy_predictions)
+    np.savetxt(Path(data_dir) / 'predictions.csv', numpy_predictions, delimiter=',', fmt='%d')
+    logger.info(f"Inference result is saved in directory: {data_dir}")
 
 
 """

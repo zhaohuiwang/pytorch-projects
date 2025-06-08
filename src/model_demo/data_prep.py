@@ -5,17 +5,25 @@ import numpy as np
 from typing import Iterator, Any, Tuple
 import numpy.typing as npt
 from src.model_demo.utils import synthesize_data, norm
+from src.model_demo.config import MetadataConfigSchema
 
-DATA_DIR = Path("data/model_demo")
-DATA_FNAME = "data_tensors.pt"
+
+
+# data_dir = "data/model_demo"
+# data_fname = "data_tensors.pt"
+# train_size = 0.8
+
+config = MetadataConfigSchema()
+data_dir = config.data.data_dir
+data_fname = config.data.data_fname
+train_size = config.model.train_size
+
 
 # Setup - data preparation
 
 # for synthesizing data following y = xW^T + bias
 true_w = torch.tensor([2., -3.])
 true_b = torch.tensor(4.)
-
-train_size = 0.8
 
 X, y = synthesize_data(true_w, true_b, 1000)
 
@@ -44,7 +52,7 @@ if __name__ == "__main__":
       }
 
   # Save to a file - A common PyTorch convention is to save tensors using .pt file extension.
-  torch.save(tensors_dict, DATA_DIR / DATA_FNAME) 
+  torch.save(tensors_dict, Path(data_dir) / data_fname) 
 
 
 # within the project director execute `python src/model_demo/data_prep.py` 
