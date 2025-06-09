@@ -19,10 +19,10 @@ class PathConfigSchema:
         the name of the model .
     """
 
-    data_dir: str = "data/model_demo"
-    data_fname: str = "data_tensors.pt"
-    model_dir: str = "models/model_demo"
-    model_fname: str = "demo_model_weights.pth"
+    data_dir: str = field(default="data/model_demo")
+    data_fname: str = field(default="data_tensors.pt")
+    model_dir: str = field(default="models/model_demo")
+    model_fname: str = field(default="demo_model_weights.pth")
 
 @dataclass
 class ModelParametersConfigSchema:
@@ -42,7 +42,7 @@ class ModelParametersConfigSchema:
 #@dataclass
 class MetadataConfigSchema:
     """
-    Configuration schema for the full training workflow.
+    Configuration schema for the full training workflow - classes grouping.
 
     Parameters
     ----------
@@ -57,3 +57,15 @@ class MetadataConfigSchema:
     data: PathConfigSchema = PathConfigSchema()
     model: ModelParametersConfigSchema = ModelParametersConfigSchema()
     # output_dir: str = ("")
+
+
+""""
+@dataclass decorator is implementing __init__(constructor), (object string representation), __eq__( equality operator) classes behind the scenes
+Data classes require type hints but types aren't actually enforced due to Python not dataclass itself. Data classes also allow default values in fields. Keep in mind that non-default fields can’t follow default fields.
+
+In practice, you will rarely define defaults with name: type = value syntax. Instead, you will use the field function, which allows more control of each field definition. Syntax: name: type = field(default=value)
+
+
+
+
+"""
