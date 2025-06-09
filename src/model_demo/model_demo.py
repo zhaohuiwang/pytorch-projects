@@ -26,7 +26,7 @@ batch_size = config.model.batch_size
 epochs = config.model.epochs
 
 ## Initialize logger
-logger = setup_logger(log_file=f'{data_dir}/model_logfile.log')
+logger = setup_logger(logger_name=__name__, log_file=f'{data_dir}/model_logfile.log')
 
 logger.info(f"Using {device} device")
 

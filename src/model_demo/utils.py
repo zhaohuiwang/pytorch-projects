@@ -11,13 +11,13 @@ from pydantic import BaseModel
 from typing import Iterator, Any, Tuple, Union
 
 
-def setup_logger(log_file:str='app.log', log_level=logging.DEBUG):
+def setup_logger(logger_name: str='MyAppLogger', log_file:str='app.log', log_level=logging.DEBUG):
     """
     Create a centralized logger configuration.
     List of logging levels: DEBUG (10) >INFO (20) > WARNING (30) > ERROR (40) > CRITICAL (50)
     """
     # Create logger
-    logger = logging.getLogger('MyAppLogger')
+    logger = logging.getLogger(logger_name)
     logger.setLevel(log_level)
     
     # Prevent adding handlers if logger is already configured

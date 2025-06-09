@@ -24,7 +24,7 @@ model_fname = config.data.model_fname
 
 
 ## Logger setup
-logger = setup_logger(log_file=f'{data_dir}/api_logfile.log')
+logger = setup_logger(logger_name=__name__, log_file=f'{data_dir}/api_logfile.log')
 
 # Initialize FastAPI app
 app = FastAPI(title="Demo model API", description="API for simple linear model prediction")
