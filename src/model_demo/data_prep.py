@@ -17,7 +17,7 @@ data_fname = config.data.data_fname
 train_size = config.model.train_size
 
 ## Initialize logger
-logger = setup_logger(log_file=f'{data_dir}/model_logfile.log')
+logger = setup_logger(log_file=f'{data_dir}/data_logfile.log')
 
 ## Setup - data preparation
 
