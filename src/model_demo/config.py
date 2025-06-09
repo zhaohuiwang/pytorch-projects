@@ -63,8 +63,11 @@ class MetadataConfigSchema:
 @dataclass decorator is implementing __init__(constructor), (object string representation), __eq__( equality operator) classes behind the scenes
 Data classes require type hints but types aren't actually enforced due to Python not dataclass itself. Data classes also allow default values in fields. Keep in mind that non-default fields can’t follow default fields.
 
-In practice, you will rarely define defaults with name: type = value syntax. Instead, you will use the field function, which allows more control of each field definition. Syntax: name: type = field(default=value)
-
+In practice, you will rarely define defaults with name: type = value syntax. Instead, you will use the **field function**, which allows more control of each field definition. Syntax: 
+name: type = field(default=value)
+The default_factory parameter accepts a function that returns an initial value for a data class field. It accepts any arbitratary funciton, including tuple, list, dict, set, and any user-defined custum function or lambda <arguments>  : expression
+for example, exercises: List[Exercise] = field(default_factory=create_warmup)
+We can add methods to data classes as we do for regular classes.
 
 
 

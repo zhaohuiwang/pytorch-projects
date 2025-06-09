@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 from typing import Iterator, Any, Tuple
 import numpy.typing as npt
-from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model
+from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model, setup_logger, device
 from src.model_demo.config import MetadataConfigSchema
 
 #data_dir = "data/model_demo"
@@ -25,45 +25,10 @@ learning_rate = config.model.learning_rate
 batch_size = config.model.batch_size
 epochs = config.model.epochs
 
-## Logger setup
-# Create a logger
-logger = logging.getLogger(__name__) # or custom name insead of __name__
-logger.setLevel(logging.DEBUG)  
-
-
-# DEBUG (10) >INFO (20) > WARNING (30) > ERROR (40) > CRITICAL (50)
-# Create a console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)  # Console shows INFO and above
-
-# Create a file handler - with relative path and overwrite option
-file_handler = logging.FileHandler('my_model_demo.log') # the Current Working Directory
-file_handler.setLevel(logging.DEBUG)  # File captures DEBUG and above
-
-# Create a formatter
-formatter = logging.Formatter(
-    fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%m/%d/%Y %I:%M:%S %p'
-    )
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-
-# Add handlers to the logger
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
-
-
-
-device = (
-    "cuda"
-    if torch.cuda.is_available()
-    else "mps" 
-    if torch.backends.mps.is_available()
-    else "cpu"
-)
+## Initialize logger
+logger = setup_logger(log_file=f'{data_dir}/model_logfile.log')
 
 logger.info(f"Using {device} device")
-
 
 ## Prepare the dataset - Load tensor
 try:

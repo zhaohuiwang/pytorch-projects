@@ -4,10 +4,8 @@ import torch.nn as nn
 import numpy as np
 from typing import Iterator, Any, Tuple
 import numpy.typing as npt
-from src.model_demo.utils import synthesize_data, norm
+from src.model_demo.utils import synthesize_data, norm, setup_logger
 from src.model_demo.config import MetadataConfigSchema
-
-
 
 # data_dir = "data/model_demo"
 # data_fname = "data_tensors.pt"
@@ -18,8 +16,10 @@ data_dir = config.data.data_dir
 data_fname = config.data.data_fname
 train_size = config.model.train_size
 
+## Initialize logger
+logger = setup_logger(log_file=f'{data_dir}/model_logfile.log')
 
-# Setup - data preparation
+## Setup - data preparation
 
 # for synthesizing data following y = xW^T + bias
 true_w = torch.tensor([2., -3.])
@@ -36,7 +36,7 @@ index = np.random.choice(X.shape[-2], size=size, replace=False)
 X_train = torch.from_numpy(norm(X[index].numpy()))
 y_train = y[index]
 
-# Prepare the test set.
+## Prepare the test set.
 X_test = torch.from_numpy(norm(np.delete(X, index, axis=0).numpy()))
 y_test = np.delete(y, index, axis=0)
 
@@ -53,6 +53,8 @@ if __name__ == "__main__":
 
   # Save to a file - A common PyTorch convention is to save tensors using .pt file extension.
   torch.save(tensors_dict, Path(data_dir) / data_fname) 
+
+  logger.info(f"Data is saved as: {Path(data_dir) / data_fname}")
 
 
 # within the project director execute `python src/model_demo/data_prep.py` 

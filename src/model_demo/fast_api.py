@@ -1,39 +1,34 @@
 
-from datetime import datetime
-from fastapi import FastAPI
+
 import logging
 import pandas as pd
-from pathlib import Path
 import torch
 import uvicorn
-from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, infer_model
 
-DATA_DIR =Path("data/model_demo")
-MODEL_DIR = Path("models/model_demo")
-MODEL_FNAME = "demo_model_weights.pth"
+from datetime import datetime
+from fastapi import FastAPI
+from pathlib import Path
+from src.model_demo.config import MetadataConfigSchema
+from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, infer_model, setup_logger, device
+
+data_dir = "data/model_demo"
+model_dir = "models/model_demo"
+model_fname = "demo_model_weights.pth"
+
+
+config = MetadataConfigSchema()
+data_dir = config.data.data_dir
+data_fname = config.data.data_fname
+model_dir = config.data.model_dir
+model_fname = config.data.model_fname
+
+
 ## Logger setup
-logger = logging.getLogger(__name__) # or custom name insead of __name__
-logger.setLevel(logging.DEBUG)  
-
-# DEBUG (10) >INFO (20) > WARNING (30) > ERROR (40) > CRITICAL (50)
-# Create a console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)  # Console shows INFO and above
-
-# Create a formatter
-formatter = logging.Formatter(
-    fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%m/%d/%Y %I:%M:%S %p'
-    )
-console_handler.setFormatter(formatter)
-
-# Add handlers to the logger
-logger.addHandler(console_handler)
+logger = setup_logger(log_file=f'{data_dir}/api_logfile.log')
 
 # Initialize FastAPI app
 app = FastAPI(title="Demo model API", description="API for simple linear model prediction")
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
 logger.info(f"Using {device} device")
 logger.info(f"Running at: {Path.cwd()}")
 
@@ -42,7 +37,7 @@ logger.info(f"Running at: {Path.cwd()}")
 model = LinearRegressionModel(2,1)
 
 # Load the trained model weights, weights_only=True as a best practice.
-model.load_state_dict(torch.load(MODEL_DIR / MODEL_FNAME, weights_only=True))
+model.load_state_dict(torch.load(Path(model_dir) / model_fname, weights_only=True))
 model.to(device)
 model.eval()  # Set to evaluate mode
 
@@ -71,7 +66,7 @@ async def predict(features: PredictionFeatures):
     # model inference
     outputs = infer_model(model, inputs)
 
-    with open(DATA_DIR / 'predictions.txt', 'a') as f:
+    with open(Path(data_dir) / 'predictions.txt', 'a') as f:
         f.write(f"{datetime.now()}\nInput:\n{input_df}\nPrediction:\n{outputs}\n\n")
 
     logger.info(f"Input: {input_df}, Prediction: {outputs}")

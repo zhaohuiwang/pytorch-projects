@@ -8,7 +8,7 @@ Poetry environment
 ```Bash
 poetry add torch torchvision matplotlib seaborn 
 poetry add fastapi[standard]
-poetry add requests
+poetry add requests rich
 ```
 
 To run the scripts and API. First, change the directory to your project `/dev/pytorch-projects`; start a VSCode  editor `code .`; 

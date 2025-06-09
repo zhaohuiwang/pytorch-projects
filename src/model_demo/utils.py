@@ -1,12 +1,54 @@
 
-from pydantic import BaseModel
+
+import logging
 import numpy as np
+import numpy.typing as npt
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from logging.handlers import RotatingFileHandler
+from pydantic import BaseModel
 from typing import Iterator, Any, Tuple, Union
-import numpy.typing as npt
 
+
+def setup_logger(log_file:str='app.log', log_level=logging.DEBUG):
+    """
+    Create a centralized logger configuration.
+    List of logging levels: DEBUG (10) >INFO (20) > WARNING (30) > ERROR (40) > CRITICAL (50)
+    """
+    # Create logger
+    logger = logging.getLogger('MyAppLogger')
+    logger.setLevel(log_level)
+    
+    # Prevent adding handlers if logger is already configured
+    if not logger.handlers:
+        # Create formatter
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            datefmt='%m/%d/%Y %I:%M:%S %p'
+        )
+        
+        # Console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        logger.addHandler(console_handler)
+        
+        # File handler with rotation (max 5MB, keep 5 backups)
+        file_handler = RotatingFileHandler(
+            log_file,
+            maxBytes=5*1024*1024,
+            backupCount=5
+        )
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+    
+    return logger
+
+
+device = lambda: ("cuda" if torch.cuda.is_available() else 
+                  "mps"  if torch.backends.mps.is_available() else 
+                  "cpu"
+                  )
 
 # Define a function to generate noisy data
 def synthesize_data(w: torch.Tensor, b: torch.Tensor, sample_size) -> Tuple[torch.Tensor, torch.Tensor]:
