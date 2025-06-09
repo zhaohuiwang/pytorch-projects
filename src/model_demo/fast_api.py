@@ -9,7 +9,7 @@ from datetime import datetime
 from fastapi import FastAPI
 from pathlib import Path
 from src.model_demo.config import MetadataConfigSchema
-from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, infer_model, setup_logger, device
+from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, infer_model, setup_logger, get_device
 
 data_dir = "data/model_demo"
 model_dir = "models/model_demo"
@@ -22,6 +22,7 @@ data_fname = config.data.data_fname
 model_dir = config.data.model_dir
 model_fname = config.data.model_fname
 
+device = get_device()
 
 ## Logger setup
 logger = setup_logger(logger_name=__name__, log_file=f'{data_dir}/api_logfile.log')

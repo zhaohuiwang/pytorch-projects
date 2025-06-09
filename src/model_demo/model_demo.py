@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 from typing import Iterator, Any, Tuple
 import numpy.typing as npt
-from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model, setup_logger, device
+from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model, setup_logger, get_device
 from src.model_demo.config import MetadataConfigSchema
 
 #data_dir = "data/model_demo"
@@ -24,6 +24,8 @@ model_fname = config.data.model_fname
 learning_rate = config.model.learning_rate
 batch_size = config.model.batch_size
 epochs = config.model.epochs
+
+device = get_device()
 
 ## Initialize logger
 logger = setup_logger(logger_name=__name__, log_file=f'{data_dir}/model_logfile.log')

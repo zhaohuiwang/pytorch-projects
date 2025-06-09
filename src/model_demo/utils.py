@@ -45,10 +45,13 @@ def setup_logger(logger_name: str='MyAppLogger', log_file:str='app.log', log_lev
     return logger
 
 
-device = lambda: ("cuda" if torch.cuda.is_available() else 
-                  "mps"  if torch.backends.mps.is_available() else 
-                  "cpu"
-                  )
+def get_device():
+    """Get the computer Chip device """
+    device = ("cuda" if torch.cuda.is_available() else 
+              "mps"  if torch.backends.mps.is_available() else 
+              "cpu"
+              )
+    return device
 
 # Define a function to generate noisy data
 def synthesize_data(w: torch.Tensor, b: torch.Tensor, sample_size) -> Tuple[torch.Tensor, torch.Tensor]:
