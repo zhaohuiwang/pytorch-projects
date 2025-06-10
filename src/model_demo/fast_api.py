@@ -49,13 +49,13 @@ model.eval()  # Set to evaluate mode
 async def index():
     return {"message": "Welcome to the model demo API. Use the /predict feature to predict your outcome."}
 '''
-
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
+# specify HTML response not JASON
+@app.get("/index/", response_class=HTMLResponse) 
+def index(request: Request):
     # Render an HTML template with dynamic data
     return templates.TemplateResponse(
         "index.html",  # Template file
-        {"request": request, "name": "World"}  # Context data passed to the template
+        {"request": request}  # Context data passed to the template
     )
 
 # Prediction endpoint
