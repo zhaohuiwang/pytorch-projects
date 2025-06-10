@@ -4,7 +4,9 @@ import torch
 import uvicorn
 
 from datetime import datetime
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 from pathlib import Path
 from src.model_demo.config import MetadataConfigSchema
 from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, PredictionFeaturesBatch, infer_model, setup_logger, get_device
@@ -28,6 +30,8 @@ logger = setup_logger(logger_name=__name__, log_file=f'{data_dir}/api_logfile.lo
 # Initialize FastAPI app
 app = FastAPI(title="Demo model API", description="API for simple linear model prediction")
 
+templates = Jinja2Templates(directory="templates")
+
 logger.info(f"Using {device} device")
 logger.info(f"Running at: {Path.cwd()}")
 
@@ -39,11 +43,20 @@ model = LinearRegressionModel(2,1)
 model.load_state_dict(torch.load(Path(model_dir) / model_fname, weights_only=True))
 model.to(device)
 model.eval()  # Set to evaluate mode
-
+'''
 # API Root endpoint
 @app.get("/")
 async def index():
     return {"message": "Welcome to the model demo API. Use the /predict feature to predict your outcome."}
+'''
+
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    # Render an HTML template with dynamic data
+    return templates.TemplateResponse(
+        "index.html",  # Template file
+        {"request": request, "name": "World"}  # Context data passed to the template
+    )
 
 # Prediction endpoint
 @app.post("/predict")
