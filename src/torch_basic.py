@@ -220,7 +220,7 @@ def load_data(tensors, batch_size, is_train=True):
  
 true_w = torch.tensor([2., -3.])
 true_b = 4.
-
+batch_size = 10
 train_size = 0.8
 
 X, y = synthesize_data(true_w, true_b, 1000)
@@ -767,3 +767,44 @@ import torch
 a = torch.tensor([[0.9041, 0.0196], [-0.3108, -2.4423], [-0.4821, 1.059]])
 b = torch.tensor([[-2.1763, -0.4713], [-0.6986, 1.3702]])
 torch.cdist(a, b, p=2)
+
+
+###  To integrate PyTorch models into scikit-learn workflows.
+# !pip install skorch
+from torch import nn
+from skorch import NeuralNetClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+class MyModule(nn.Module):
+    def __init__(self, num_units=10, nonlin=nn.ReLU()):
+      super().__init__()
+
+      self.dense = nn.Linear(20, num_units)
+      self.nonlin = nonlin
+      self.output = nn.Linear(num_units, 2)
+      self.softmax(self.output(dim=-1))
+    
+    def forward(self, X, **kwargs):
+       X = self.nonlin(self.dense(X))
+       X = self.dropout(X)
+       X = self.softmax(self.output(X))
+       return X
+    
+net = NeuralNetClassifier(
+MyModule,
+max_epochs=10,
+lr=0.1,
+iterator_train_shuffle=True
+)
+
+pipe = Pipeline([
+   ('scale', StandardScaler()),
+   ('net', net),
+])
+
+pipe.fit(X,y)
+y_prob=pipe.predict_proba(X)
+
+
+
