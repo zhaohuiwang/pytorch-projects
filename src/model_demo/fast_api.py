@@ -1,6 +1,4 @@
-
-
-import logging
+import numpy as np
 import pandas as pd
 import torch
 import uvicorn
@@ -9,7 +7,7 @@ from datetime import datetime
 from fastapi import FastAPI
 from pathlib import Path
 from src.model_demo.config import MetadataConfigSchema
-from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, infer_model, setup_logger, get_device
+from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, PredictionFeaturesBatch, infer_model, setup_logger, get_device
 
 data_dir = "data/model_demo"
 model_dir = "models/model_demo"
@@ -65,7 +63,7 @@ async def predict(features: PredictionFeatures):
     inputs = torch.tensor(np_array)
 
     # model inference
-    outputs = infer_model(model, inputs)
+    outputs = infer_model(model, inputs).tolist()
 
     with open(Path(data_dir) / 'predictions.txt', 'a') as f:
         f.write(f"{datetime.now()}\nInput:\n{input_df}\nPrediction:\n{outputs}\n\n")
@@ -76,9 +74,28 @@ async def predict(features: PredictionFeatures):
         "Model prediction": outputs
     }
 
+# Batch prediction endpoint
+@app.post("/batch_predict")
+async def batch_predict(features: PredictionFeaturesBatch):
+# defined an asynchronous function named prediction - allowing other tasks to run while it waits for I/O-bound operations
+
+    # Create input data for prediction
+    inputs = np.array(features.input_array)
+
+    # Convert NumPy array to PyTorch tensor
+    inputs = torch.tensor(inputs)
+
+    # model inference
+    outputs = infer_model(model, inputs).tolist()
+
+    with open(Path(data_dir) / 'predictions.txt', 'a') as f:
+        f.write(f"{datetime.now()}\nInput:\n{inputs}\nPrediction:\n{outputs}\n\n")
+
+    logger.info(f"Input: {inputs}, Prediction: {outputs}")
+
+    return {
+        "Model prediction": outputs
+    }
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
-        
-
-
-# https://towardsdatascience.com/journey-to-full-stack-data-scientist-model-deployment-f385f244ec67/

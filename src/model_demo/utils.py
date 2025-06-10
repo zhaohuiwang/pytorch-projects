@@ -1,5 +1,3 @@
-
-
 import logging
 import numpy as np
 import numpy.typing as npt
@@ -8,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from logging.handlers import RotatingFileHandler
 from pydantic import BaseModel
-from typing import Iterator, Any, Tuple, Union
+from typing import Iterator, List, Any, Tuple, Union
 
 
 def setup_logger(logger_name: str='MyAppLogger', log_file:str='app.log', log_level=logging.DEBUG):
@@ -81,7 +79,10 @@ class PredictionFeatures(BaseModel):
     feature_X_1: Union[int, float]
     feature_X_2: Union[int, float]
     
-       
+class PredictionFeaturesBatch(BaseModel):
+    input_array: List[Tuple[Union[int, float], Union[int, float]]]
+
+
 def load_data(tensors: torch.Tensor, batch_size:torch.Tensor, is_train: bool=True) -> Iterator[Any]:
    """ Construct a PyTorch data iterator."""
    dataset = torch.utils.data.TensorDataset(*tensors)
@@ -132,4 +133,4 @@ def infer_model(model, inputs, device='cuda' if torch.cuda.is_available() else '
         # Forward pass (inference)
         outputs = model(inputs)
     
-    return outputs
+    return torch.squeeze(outputs)

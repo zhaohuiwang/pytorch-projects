@@ -10,7 +10,7 @@ poetry add torch torchvision matplotlib seaborn
 poetry add fastapi[standard]
 poetry add requests rich
 ```
-
+To activate the envoronment: `source .venv/bin/activate`
 To run the scripts and API. First, change the directory to your project `/dev/pytorch-projects`; start a VSCode  editor `code .`; 
 you can then generate synthetic data, train a model and test the FastAPI.
 
@@ -60,3 +60,7 @@ To submit test data for inference
 zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ source .venv/bin/activate
 (pytorch-projects-py3.12) zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python src/model_demo/submit_for_inference.py
 ```
+
+To see the prediction result from `http://localhost:8000/docs`
+Alternatively, use curl
+`curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{ "feature_X_1": 4,"feature_X_2": 7}'`
