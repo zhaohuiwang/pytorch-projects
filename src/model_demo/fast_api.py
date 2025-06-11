@@ -11,11 +11,6 @@ from pathlib import Path
 from src.model_demo.config import MetadataConfigSchema
 from src.model_demo.utils import LinearRegressionModel, PredictionFeatures, PredictionFeaturesBatch, infer_model, setup_logger, get_device
 
-data_dir = "data/model_demo"
-model_dir = "models/model_demo"
-model_fname = "demo_model_weights.pth"
-
-
 config = MetadataConfigSchema()
 data_dir = config.data.data_dir
 data_fname = config.data.data_fname

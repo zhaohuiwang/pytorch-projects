@@ -10,8 +10,8 @@ poetry add torch torchvision matplotlib seaborn
 poetry add fastapi[standard]
 poetry add requests rich
 ```
-To activate the envoronment: `source .venv/bin/activate`
-To run the scripts and API. First, change the directory to your project `/dev/pytorch-projects`; start a VSCode  editor `code .`; 
+
+To run the scripts and API. First, change the directory to your project `/dev/pytorch-projects`; start a VSCode  editor `code .`; you may need to activate the envoronment: `source .venv/bin/activate` after which you should expect `(pytorch-projects-py3.12)` at the begining of the bash/szh prompt indicating you are inside a Python environment. 
 you can then generate synthetic data, train a model and test the FastAPI.
 
 
@@ -25,21 +25,21 @@ model_demo/
 └── utils.py
 ```
 
-I run the `data_prep.py` as a script file
+If you like to execute the `data_prep.py` as a script file, follow this instruction
 ```Bash
 pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python  src/model_demo/data_prep.py
 # with the following path specification in the scriptimport sys
 sys.path.append('/src/model_demo')
 from utils import synthesize_data, norm
 ```
-or run as a module
+or if you want to run it as a module
 ```Bash
 pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.data_prep
 # with the alternative specification in the script
 from src.model_demo.utils import synthesize_data, norm
 ```
 
-I configured and run `model_demo.py` as a module with `-m` option. 
+I only configured and run `model_demo.py` as a module with `-m` option. 
 ```Bash
 pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.model_demo
 ```
