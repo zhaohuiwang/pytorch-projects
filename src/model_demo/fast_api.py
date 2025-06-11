@@ -1,3 +1,12 @@
+
+""" 
+FastAPI: web framework for building APIs for creating server-side applications
+Built on Starlette (for web handling) and Pydantic (for data validation), with support for asynchronous programming using async/await.
+Ideal for creating production-ready APIs with automatic documentation (Swagger UI, ReDoc) and type safety.
+Runs on an ASGI server like Uvicorn, typically on http://localhost:8000 during development.
+
+"""
+
 import numpy as np
 import pandas as pd
 import torch
@@ -88,7 +97,7 @@ async def batch_predict(features: PredictionFeaturesBatch):
 # defined an asynchronous function named prediction - allowing other tasks to run while it waits for I/O-bound operations
 
     # Create input data for prediction
-    inputs = np.array(features.input_array)
+    inputs = np.array(features.input_data)
 
     # Convert NumPy array to PyTorch tensor
     inputs = torch.tensor(inputs)

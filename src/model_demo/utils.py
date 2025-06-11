@@ -80,7 +80,7 @@ class PredictionFeatures(BaseModel):
     feature_X_2: Union[int, float]
     
 class PredictionFeaturesBatch(BaseModel):
-    input_array: List[Tuple[Union[int, float], Union[int, float]]]
+    input_data: List[Tuple[Union[int, float], Union[int, float]]]
 
 
 def load_data(tensors: torch.Tensor, batch_size:torch.Tensor, is_train: bool=True) -> Iterator[Any]:
