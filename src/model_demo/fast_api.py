@@ -78,19 +78,17 @@ async def root(request: Request):
 async def root(request: Request):
     #return {"message": "Welcome to my API"} # when applying the default response_class is JSON
     return templates.TemplateResponse(
-        "prediction.html",
+        "predict.html",
         {"request": request}  # Context data passed to the template
     )
 
-"""
-@app.get("/index", response_class=HTMLResponse) # specify HTML response not the default JSON
-async def index(request: Request):
-    # Render an HTML template with dynamic data
+@app.get("/batch_predict", response_class=HTMLResponse)
+async def batch(request: Request):
     return templates.TemplateResponse(
-        "index.html",  # Template file
+        "batch_predict.html",  # Template file for batch prediction
         {"request": request}  # Context data passed to the template
     )
-"""
+
 
 # Prediction endpoint
 @app.post("/predict", description="Predict using a single set of features (X_1, X_2).")
@@ -132,11 +130,15 @@ async def batch_predict(features: PredictionFeaturesBatch):
         # Create input data for prediction
         inputs = np.array(features.input_data)
 
+        # Validate input shape
+        if inputs.ndim != 2 or inputs.shape[1] != 2:
+            raise ValueError("Input must be a 2D array with 2 features per row")
+
         # Convert NumPy array to PyTorch tensor
-        inputs = torch.tensor(inputs)
+        inputs = torch.tensor(inputs, dtype=torch.float32)
 
         # model inference
-        outputs = infer_model(model, inputs).tolist()
+        outputs = infer_model(model, inputs).flatten().tolist()
 
         with open(Path(data_dir) / 'predictions.txt', 'a') as f:
             f.write(f"{datetime.now()}\nInput:\n{inputs}\nPrediction:\n{outputs}\n\n")

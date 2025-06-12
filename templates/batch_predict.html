@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .input-box, .output-box {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .input-box textarea {
+            width: 100%;
+            height: 100px;
+            padding: 8px;
+            margin: 5px;
+        }
+        .output-box {
+            background-color: #f9f9f9;
+            min-height: 100px;
+            line-height: 1.5;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Batch Model Prediction</h1>
+    <p>Enter feature pairs as a JSON array, e.g., [[1.0, 2.0], [3.0, 4.0]]</p>
+    <form id="batch-prediction-form" onsubmit="handleSubmit(event)">
+        <div class="input-box">
+            <label for="input_data">Feature Pairs:</label><br>
+            <textarea id="input_data" name="input_data" placeholder="[[1.0, 2.0], [3.0, 4.0]]" required></textarea>
+        </div>
+        <button type="submit">Predict</button>
+    </form>
+    <div class="output-box" id="prediction-result">
+        <!-- Batch predictions will be displayed here -->
+    </div>
+
+    <script>
+        async function handleSubmit(event) {
+            event.preventDefault(); // Prevent form from refreshing the page
+
+            // Get input value
+            const inputData = document.getElementById('input_data').value.trim();
+
+            // Validate input
+            let parsedData;
+            try {
+                parsedData = JSON.parse(inputData);
+                if (!Array.isArray(parsedData) || !parsedData.every(arr => Array.isArray(arr) && arr.length === 2 && arr.every(val => typeof val === 'number'))) {
+                    throw new Error('Input must be an array of [X_1, X_2] pairs');
+                }
+            } catch (error) {
+                document.getElementById('prediction-result').innerText = `Error: Invalid input format - ${error.message}`;
+                return;
+            }
+
+            // Prepare data for POST request
+            const data = { input_data: parsedData };
+
+            try {
+                // Show loading message
+                document.getElementById('prediction-result').innerText = 'Loading...';
+
+                // Send POST request to /batch_predict endpoint
+                const response = await fetch('/batch_predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Check if response is OK
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    document.getElementById('prediction-result').innerText = `Error: ${errorData.detail || response.statusText}`;
+                    return;
+                }
+
+                const result = await response.json();
+                console.log('API Response:', result); // Log for debugging
+
+                // Validate response
+                if (!result['Model prediction'] || !Array.isArray(result['Model prediction'])) {
+                    document.getElementById('prediction-result').innerText = 'Error: Invalid response format';
+                    return;
+                }
+
+                // Format predictions
+                const predictions = result['Model prediction'].map(pred => Number(pred).toFixed(4)).join('\n');
+                document.getElementById('prediction-result').innerText = `Predictions:\n${predictions}`;
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                document.getElementById('prediction-result').innerText = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
