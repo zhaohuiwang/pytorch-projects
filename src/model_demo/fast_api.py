@@ -14,6 +14,7 @@ import uvicorn
 
 from datetime import datetime
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from pathlib import Path
@@ -32,7 +33,15 @@ device = get_device()
 logger = setup_logger(logger_name=__name__, log_file=f'{data_dir}/api_logfile.log')
 
 # Initialize FastAPI app
-app = FastAPI(title="Demo model API", description="API for simple linear model prediction")
+app = FastAPI(
+    title="Demo model API", # title on Swagger UI URL
+    description="API for simple linear model prediction",
+    version="1.0.0",
+    docs_url="/docs",  # Custom URL for Swagger UI
+    )
+
+# Mount the static directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -47,20 +56,27 @@ model = LinearRegressionModel(2,1)
 model.load_state_dict(torch.load(Path(model_dir) / model_fname, weights_only=True))
 model.to(device)
 model.eval()  # Set to evaluate mode
-'''
+
+
 # API Root endpoint
-@app.get("/")
-async def index():
-    return {"message": "Welcome to the model demo API. Use the /predict feature to predict your outcome."}
-'''
-# specify HTML response not JASON
-@app.get("/index/", response_class=HTMLResponse) 
-def index(request: Request):
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    #return {"message": "Welcome to my API"} # when applying the default response_class is JSON
+    return templates.TemplateResponse(
+        "main.html",  # Template file
+        {"request": request}  # Context data passed to the template
+    )
+
+
+"""
+@app.get("/index", response_class=HTMLResponse) # specify HTML response not the default JSON
+async def index(request: Request):
     # Render an HTML template with dynamic data
     return templates.TemplateResponse(
         "index.html",  # Template file
         {"request": request}  # Context data passed to the template
     )
+"""
 
 # Prediction endpoint
 @app.post("/predict")

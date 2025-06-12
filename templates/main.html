@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Demo FastAPI</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        /* Center the h1 text horizontally */
+        h1 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+</head>
+<body>
+    <div class="main-header">
+        <h1>Welcome to Zhaohui Wang's Web Server API Demo</h1>
+    </div>
+    <div class="content">
+        <h2>Environment setup</h2>
+        <h3>Poetry environment</h3>
+        <p>Create a project directory and add at least the following python libraries.</p>
+        <pre><code class="language-bash">
+            poetry add torch torchvision matplotlib seaborn 
+            poetry add fastapi[standard]
+            poetry add requests rich
+        </code></pre>
+        <p>First, change the directory to your project <code>/dev/pytorch-projects</code>; start a VSCode editor <code>code .</code>; you may need to activate the environment: <code>source .venv/bin/activate</code> after which you should expect <code>(pytorch-projects-py3.12)</code> at the beginning of the bash/zsh prompt indicating you are inside a Python environment. You can then generate synthetic data, train a model and test the FastAPI.</p>
+        <p>Here are the how the files are organized in my project directory.</p>
+        <pre><code class="language-bash">.
+            .
+            ├── .git
+            ├── .venv
+            ├── data
+            │   └── model_demo
+            │       ├── api_logfile.log
+            │       ├── data_logfile.log
+            │       ├── data_tensors.pt
+            │       ├── model_logfile.log
+            │       ├── predictions.csv
+            │       ├── predictions.npy
+            │       ├── predictions.txt
+            │       └── response_output.txt
+            ├── poetry.lock
+            ├── pyproject.toml
+            ├── src
+            │   ├── model_demo
+            │   │   ├── README.md
+            │   │   ├── __init__.py
+            │   │   ├── config.py
+            │   │   ├── data_prep.py
+            │   │   ├── fast_api.py
+            │   │   ├── model_demo.py
+            │   │   ├── submit_for_inference.py
+            │   │   └── utils.py
+            ├── static
+            │   └── styles.css
+            ├── templates
+            │   └── index.html
+            └── .gitignore
+
+        </code></pre>
+        <h2>Data Preparation</h2>
+        <p>If you like to execute the <code>data_prep.py</code> as a script file, follow this instruction</p>
+        <pre><code class="language-bash">pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python  src/model_demo/data_prep.py
+            # with the following path specification in the script
+            import sys
+            sys.path.append('/src/model_demo')
+            from utils import synthesize_data, norm
+        </code></pre>
+        <p>or if you want to run it as a module</p>
+        <pre><code class="language-bash">pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.data_prep
+        # with the alternative specification in the script
+        from src.model_demo.utils import synthesize_data, norm
+        </code></pre>
+        <h2>Model Training</h2>
+        <p>I only configured and run <code>model_demo.py</code> as a module with <code>-m</code> option.</p>
+        <pre><code class="language-bash">pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.model_demo
+        </code></pre>
+        <p>With the following import code (compare to the <code>data_prep.py</code> above)</p>
+        <pre><code class="language-python">from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model
+        </code></pre>
+        <h2>Model Inference</h2>
+        <h3>Model inference on server</h3>
+        <p>To run the server from <code>pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$</code></p>
+        <pre><code class="language-bash">python -m uvicorn src.model_demo.fast_api:app --reload --port 8000
+        </code></pre>
+        <p>To submit test data for inference through web URL <a href="http://localhost:8000/docs">http://localhost:8000/docs</a> by Swagger UI. (typical localhost IP address is 127.0.0.1, so alternatively you may through <a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a> instead. Run <code>cat /etc/hosts</code> from terminal to confirm the IP address)</p>
+        <p>Go to Post &gt; [Try it out] &gt; input data into &quot;Request body&quot; box &gt; [Execute]</p>
+        <h3>Model inference through Python script</h3>
+        <p>To submit test data for inference through Python script</p>
+        <pre><code class="language-bash">zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ source .venv/bin/activate
+        (pytorch-projects-py3.12) zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python src/model_demo/submit_for_inference.py
+        </code></pre>
+        <p>To see the prediction result from <a href="http://localhost:8000/docs">http://localhost:8000/docs</a>
+        Alternatively, use curl
+        <code>curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{ "feature_X_1": 4,"feature_X_2": 7}'</code></p>
+    </div>
+    <div>
+    </div>
+</body>
+</html>
+
+
+
+
+<!--
+<h1>Hello, World!</h1>
+<p>This is a <strong>bold</strong> text with some <em>italic</em> content.</p>
+<ul>
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ul>
+<p><a href="https://fastapi.tiangolo.com">Link to FastAPI</a></p>
+
+-->

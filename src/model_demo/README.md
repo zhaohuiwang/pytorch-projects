@@ -4,27 +4,53 @@
 
 
 ## Environment setup
-Poetry environment
+### Poetry environment
+Create a project directory and add at least the following python libraries.
 ```Bash
 poetry add torch torchvision matplotlib seaborn 
 poetry add fastapi[standard]
 poetry add requests rich
 ```
 
-To run the scripts and API. First, change the directory to your project `/dev/pytorch-projects`; start a VSCode  editor `code .`; you may need to activate the envoronment: `source .venv/bin/activate` after which you should expect `(pytorch-projects-py3.12)` at the begining of the bash/szh prompt indicating you are inside a Python environment. 
-you can then generate synthetic data, train a model and test the FastAPI.
+First, change the directory to your project `/dev/pytorch-projects`; start a VSCode  editor `code .`; you may need to activate the envoronment: `source .venv/bin/activate` after which you should expect `(pytorch-projects-py3.12)` at the begining of the bash/szh prompt indicating you are inside a Python environment. 
+You can then generate synthetic data, train a model and test the FastAPI.
 
-
+Here are the how the files are organized in my project directory.
 ```Bash
-model_demo/
-├── Dockerfile
-├── README.md
-├── data_prep.py
-├── fast_api.py
-├── model_demo.py
-└── utils.py
+.
+├── .git
+├── .venv
+├── data
+│   └── model_demo
+│       ├── api_logfile.log
+│       ├── data_logfile.log
+│       ├── data_tensors.pt
+│       ├── model_logfile.log
+│       ├── predictions.csv
+│       ├── predictions.npy
+│       ├── predictions.txt
+│       └── response_output.txt
+├── poetry.lock
+├── pyproject.toml
+├── src
+│   ├── model_demo
+│   │   ├── README.md
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── data_prep.py
+│   │   ├── fast_api.py
+│   │   ├── model_demo.py
+│   │   ├── submit_for_inference.py
+│   │   └── utils.py
+├── static
+│   └── styles.css
+├── templates
+│   └── index.html
+└── .gitignore
+
 ```
 
+## Data Preparation
 If you like to execute the `data_prep.py` as a script file, follow this instruction
 ```Bash
 pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python  src/model_demo/data_prep.py
@@ -38,7 +64,7 @@ pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-pro
 # with the alternative specification in the script
 from src.model_demo.utils import synthesize_data, norm
 ```
-
+## Model Training
 I only configured and run `model_demo.py` as a module with `-m` option. 
 ```Bash
 pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.model_demo
@@ -47,8 +73,9 @@ With the following import code (compare to the `data_prep.py` above)
 ```python
 from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model
 ```
-Note: The command is `python -m src.model_demo.model_demo` not `python -m src.model_demo.model_demo.py`. The later throws error `ModuleNotFoundError: __path__ attribute not found on 'src.model_demo.model_demo' while trying to find 'src.model_demo.model_demo.py'`
 
+## Model Inference
+### Model inference on server
 To run the server from `pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ `
 
 ```Bash
@@ -58,6 +85,7 @@ To submit test data for inference through web URL http://localhost:8000/docs by 
 
 Go to Post > [Try it out] > input data into "Request body" box > [Execute]
 
+### Model inference through Python script
 To submit test data for inference through Python script
 ```Bash
 zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ source .venv/bin/activate
