@@ -63,7 +63,7 @@ model.to(device)
 model.eval()  # Set to evaluate mode
 
 
-# API Root endpoint
+# API Root endpoint - HTTP method for data requests/retrieval
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     #return {"message": "Welcome to my API"} # when applying the default response_class is JSON
@@ -73,7 +73,7 @@ async def root(request: Request):
     )
 
 
-# API Root endpoint
+# API End point for data request from API prediction 
 @app.get("/predict", response_class=HTMLResponse)
 async def root(request: Request):
     #return {"message": "Welcome to my API"} # when applying the default response_class is JSON
@@ -90,7 +90,7 @@ async def batch(request: Request):
     )
 
 
-# Prediction endpoint
+# API end point for data submission for API prediction (HTTP post) 
 @app.post("/predict", description="Predict using a single set of features (X_1, X_2).")
 async def predict(features: PredictionFeatures):
 # defined an asynchronous function named prediction - allowing other tasks to run while it waits for I/O-bound operations
@@ -122,7 +122,7 @@ async def predict(features: PredictionFeatures):
         logger.error(f"Prediction error: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
 
-# Batch prediction endpoint
+# # API end point for data submission for API Batch prediction
 @app.post("/batch_predict", description="Predict using batch input like [[X_1, X_2], ...]")
 async def batch_predict(features: PredictionFeaturesBatch):
 # defined an asynchronous function named prediction - allowing other tasks to run while it waits for I/O-bound operations

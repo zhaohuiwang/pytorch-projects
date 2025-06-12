@@ -1,12 +1,19 @@
 
 ## Env setup
+
+### Poetry
 ```
-uv init --python 3.12
-uv add torch torchvision matplotlib seaborn 
-```
-Encounter an error message `ModuleNotFoundError: No module named '_ctypes'`
-this error just wont go away when using poetry instead 
-```
+poetry new pytorch-projects
+cd pytorch-projects
 poetry add torch torchvision matplotlib seaborn 
 poetry add fastapi[standard]
+poetry add requests rich
+```
+### UV
+```
+uv init pytorch-projects
+cd pytorch-projects
+uv add torch torchvision matplotlib seaborn
+uv add fastapi[standard]
+uv add requests rich
 ```
