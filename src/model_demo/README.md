@@ -93,5 +93,8 @@ zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ source .venv/bin
 ```
 
 To see the prediction result from `http://localhost:8000/docs`
-Alternatively, use curl
-`curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{ "feature_X_1": 4,"feature_X_2": 7}'`
+Alternatively, use curl to execute prediction. Here are examples
+```Bash
+curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{"feature_X_1": 1.0, "feature_X_2": 2.0}'
+curl -X POST "http://localhost:8000/batch_predict" -H "Content-Type: application/json" -d '{"input_data": [[1.0, 2.0], [3.0, 4.0]]}'
+```
