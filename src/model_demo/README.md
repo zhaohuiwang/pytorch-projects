@@ -81,7 +81,7 @@ To run the server from `pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zha
 ```Bash
 python -m uvicorn src.model_demo.fast_api:app --reload --port 8000
 ```
-To submit test data for inference through web URL http://localhost:8000/docs by Swagger UI. (typical localhost IP address is 127.0.0.1, so alternatively you may through http://127.0.0.1:8000/docs instead. Run `cat /etc/hosts` from terminal to confirm the IP address) 
+To submit test data for inference through web URL http://localhost:8000/docs by Swagger UI. (typical localhost IP address is 127.0.0.1, so alternatively you may through http://127.0.0.1:8000/docs instead. Run `cat /etc/hosts` from terminal to confirm the IP address). To access the ReDoc-generated page displaying your API’s documentation, navigate to http://localhost:8000/redoc
 
 Go to Post > [Try it out] > input data into "Request body" box > [Execute]
 

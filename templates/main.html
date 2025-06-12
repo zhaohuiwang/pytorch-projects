@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Responsive design - adoptive to different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Set the webpage's title displayed in the browser's tab or title bar -->
     <title>Model Demo FastAPI</title>
+    <!-- Links an external CSS stylesheet located -->
     <link rel="stylesheet" href="/static/styles.css">
-    <style>
-        /* Center the h1 text horizontally */
-        h1 {
-            text-align: center;
-        }
-    </style>
+    <!-- Includes the HTMX JavaScript library (v 1.6.1) from the unpkg CDN -->
     <script src="https://unpkg.com/htmx.org@1.6.1"></script>
 </head>
 <body>
@@ -64,20 +62,23 @@
         </code></pre>
         <h2>Data Preparation</h2>
         <p>If you like to execute the <code>data_prep.py</code> as a script file, follow this instruction</p>
-        <pre><code class="language-bash">pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python  src/model_demo/data_prep.py
+        <pre><code class="language-bash">
+            pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python  src/model_demo/data_prep.py
             # with the following path specification in the script
             import sys
             sys.path.append('/src/model_demo')
             from utils import synthesize_data, norm
         </code></pre>
         <p>or if you want to run it as a module</p>
-        <pre><code class="language-bash">pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.data_prep
-        # with the alternative specification in the script
-        from src.model_demo.utils import synthesize_data, norm
+        <pre><code class="language-bash">
+            pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.data_prep
+            # with the alternative specification in the script
+            from src.model_demo.utils import synthesize_data, norm
         </code></pre>
         <h2>Model Training</h2>
         <p>I only configured and run <code>model_demo.py</code> as a module with <code>-m</code> option.</p>
-        <pre><code class="language-bash">pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.model_demo
+        <pre><code class="language-bash">
+            pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python -m src.model_demo.model_demo
         </code></pre>
         <p>With the following import code (compare to the <code>data_prep.py</code> above)</p>
         <pre><code class="language-python">from src.model_demo.utils import LinearRegressionModel, load_data, infer_evaluate_model
@@ -85,18 +86,22 @@
         <h2>Model Inference</h2>
         <h3>Model inference on server</h3>
         <p>To run the server from <code>pytorch-projects-py3.12zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$</code></p>
-        <pre><code class="language-bash">python -m uvicorn src.model_demo.fast_api:app --reload --port 8000
+        <pre><code class="language-bash">
+            python -m uvicorn src.model_demo.fast_api:app --reload --port 8000
         </code></pre>
-        <p>To submit test data for inference through web URL <a href="http://localhost:8000/docs">http://localhost:8000/docs</a> by Swagger UI. (typical localhost IP address is 127.0.0.1, so alternatively you may through <a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a> instead. Run <code>cat /etc/hosts</code> from terminal to confirm the IP address)</p>
+        <p>To submit test data for inference through web URL <a href="http://localhost:8000/docs">http://localhost:8000/docs</a> by Swagger UI. (typical localhost IP address is 127.0.0.1, so alternatively you may through <a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a> instead. Run <code>cat /etc/hosts</code> from terminal to confirm the IP address). To access the ReDoc-generated page displaying your API’s documentation, navigate to <a href="http://localhost:8000/redoc">http://localhost:8000/redoc</a></p>
         <p>Go to Post &gt; [Try it out] &gt; input data into &quot;Request body&quot; box &gt; [Execute]</p>
         <h3>Model inference through Python script</h3>
         <p>To submit test data for inference through Python script</p>
-        <pre><code class="language-bash">zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ source .venv/bin/activate
-        (pytorch-projects-py3.12) zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python src/model_demo/submit_for_inference.py
+        <pre><code class="language-bash">
+            zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ source .venv/bin/activate
+            (pytorch-projects-py3.12) zhaohuiwang@WangFamily:/mnt/e/zhaohuiwang/dev/pytorch-projects$ python src/model_demo/submit_for_inference.py
         </code></pre>
         <p>To see the prediction result from <a href="http://localhost:8000/docs">http://localhost:8000/docs</a>
         Alternatively, use curl
-        <code>curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{ "feature_X_1": 4,"feature_X_2": 7}'</code></p>
+        <pre><code class="language-bash">
+            curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{ "feature_X_1": 4,"feature_X_2": 7}'
+        </code></pre>
     </ol>
     </div>
     <div>
