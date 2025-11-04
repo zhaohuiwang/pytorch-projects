@@ -442,7 +442,9 @@ modelX.to(device)
 # Remember that you must call model.eval() to set dropout and batch normalization layers to evaluation mode before running inference. Failing to do this will yield inconsistent inference results. If you wish to resuming training, call model.train() to set these layers to training mode.
 modelX.eval()
 
+torch.export()
 
+# torch.export.export() takes a torch.nn.Module and produces a traced graph representing only the Tensor computation of the function in an Ahead-of-Time (AOT) fashion, which can subsequently be executed with different outputs or serialized.
 
 
 

@@ -313,3 +313,78 @@ class Attention(torch.nn.Module):
 
 #or with multihead:
 multihead_attn = nn.MultiheadAttention(embed_dim, num_heads=1)
+
+
+'''
+tf.keras provides functionalities to save and load models. This allows for preserving the model's architecture, weights, and training configuration, enabling you to:
+Resume training: Continue training from a saved point without starting from scratch.
+Share models: Distribute trained models for others to use or fine-tune.
+Deploy models: Export models for use in production environments without needing the original Python code.
+
+'''
+import tensorflow as tf
+
+# Create a simple Keras model
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(10, activation='relu', input_shape=(784,)),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+# Compile the model (optional, but recommended for saving optimizer state)
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Save the model in the default Keras v3 format
+model.save('my_model.keras')
+
+# Or save in TensorFlow SavedModel format
+# model.save('my_saved_model', save_format='tf')
+
+# Or save in HDF5 format
+# model.save('my_model.h5', save_format='h5')
+
+# Load the saved model
+loaded_model = tf.keras.models.load_model('my_model.keras')
+
+# Now you can use the loaded_model for predictions or further training
+predictions = loaded_model.predict(some_data)
+
+
+import torch
+from torch.export import export, ExportedProgram
+
+class Mod(torch.nn.Module):
+    def forward(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        a = torch.sin(x)
+        b = torch.cos(y)
+        return a + b
+
+example_args = (torch.randn(10, 10), torch.randn(10, 10))
+
+exported_program: ExportedProgram = export(Mod(), args=example_args)
+print(exported_program)
+
+# torch.export-based ONNX Exporter
+import torch
+
+class MyModel(torch.nn.Module):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        self.conv1 = torch.nn.Conv2d(1, 128, 5)
+
+    def forward(self, x):
+        return torch.relu(self.conv1(x))
+
+input_tensor = torch.rand((1, 1, 128, 128), dtype=torch.float32)
+
+model = MyModel()
+
+torch.onnx.export(
+    model,                  # model to export
+    (input_tensor,),        # inputs of the model,
+    "my_model.onnx",        # filename of the ONNX model
+    input_names=["input"],  # Rename inputs for the ONNX model
+    dynamo=True             # True or False to select the exporter to use
+)
+
