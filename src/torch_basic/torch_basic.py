@@ -121,6 +121,7 @@ def synthesize_data(w, b, sample_size):
   y += torch.normal(0, 0.01, y.shape)
   
   return X, y.reshape((-1, 1))
+# reshape() vs ravel() vs flattern()
 
 true_w = torch.tensor([2., -3.])
 true_b = 4.
